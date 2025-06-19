@@ -4,7 +4,7 @@ import 'login_screen.dart'; // Nous allons créer ces fichiers
 import 'home_screen.dart';
 
 class AuthChecker extends StatelessWidget {
-  const AuthChecker({Key? key}) : super(key: key);
+  const AuthChecker({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,14 +13,14 @@ class AuthChecker extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // Affichez un indicateur de chargement pendant la vérification de l'état
-          return Scaffold(body: Center(child: CircularProgressIndicator()));
+          return const Scaffold(body: Center(child: CircularProgressIndicator()));
         }
         if (snapshot.hasData) {
           // L'utilisateur est connecté, redirigez vers l'écran d'accueil
-          return HomeScreen();
+          return const HomeScreen();
         } else {
           // L'utilisateur n'est pas connecté, redirigez vers l'écran de connexion
-          return LoginScreen();
+          return const LoginScreen();
         }
       },
     );
