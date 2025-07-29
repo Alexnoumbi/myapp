@@ -1,28 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'login_screen.dart'; // Nous allons créer ces fichiers
+import 'admin/admin_dashboard_page.dart';
 import 'home_screen.dart';
+import 'homepage/public_home_page.dart';
 
 class AuthChecker extends StatelessWidget {
   const AuthChecker({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          // Affichez un indicateur de chargement pendant la vérification de l'état
-          return const Scaffold(body: Center(child: CircularProgressIndicator()));
-        }
-        if (snapshot.hasData) {
-          // L'utilisateur est connecté, redirigez vers l'écran d'accueil
-          return const HomeScreen();
-        } else {
-          // L'utilisateur n'est pas connecté, redirigez vers l'écran de connexion
-          return const LoginScreen();
-        }
-      },
-    );
+    return const AdminDashboardPage();
   }
 }
