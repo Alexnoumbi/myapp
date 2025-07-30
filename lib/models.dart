@@ -29,7 +29,7 @@ class IndicateurPerformance {
 
   IndicateurPerformance({required this.nom, required this.valeur});
 
-   // Helper method to convert IndicateurPerformance to Map for Firestore
+  // Helper method to convert IndicateurPerformance to Map for Firestore
   Map<String, dynamic> toMap() {
     return {
       'nom': nom,
@@ -179,7 +179,7 @@ class Entreprise {
     }
 
     List<IndicateurPerformance> indicateursList = [];
-     if (firestoreDoc['indicateurs'] != null) {
+    if (firestoreDoc['indicateurs'] != null) {
       indicateursList = (firestoreDoc['indicateurs'] as List)
           .map((item) => IndicateurPerformance.fromMap(item as Map<String, dynamic>))
           .toList();
@@ -242,6 +242,8 @@ class SuiviConjoncture {
   List<String>? raisonsHausse;
   List<String>? raisonsBaisse;
   double? evolutionPrixVente; // 1=hausse, 2=baisse, 3=stabilité
+  double? coutsProduction; // Nouveau champ
+  int? evolutionCoutsProduction; // Nouveau champ: 1=Accroissement, 2=Baisse, 3=Stabilité
   int? effectifs;
   bool? nouveauxEmploisCrees;
   int? nbNouveauxEmplois;
@@ -258,6 +260,8 @@ class SuiviConjoncture {
     this.raisonsHausse,
     this.raisonsBaisse,
     this.evolutionPrixVente,
+    this.coutsProduction, // Nouveau champ
+    this.evolutionCoutsProduction, // Nouveau champ
     this.effectifs,
     this.nouveauxEmploisCrees,
     this.nbNouveauxEmplois,
@@ -276,6 +280,8 @@ class SuiviConjoncture {
       'raisonsHausse': raisonsHausse,
       'raisonsBaisse': raisonsBaisse,
       'evolutionPrixVente': evolutionPrixVente,
+      'coutsProduction': coutsProduction, // Nouveau champ
+      'evolutionCoutsProduction': evolutionCoutsProduction, // Nouveau champ
       'effectifs': effectifs,
       'nouveauxEmploisCrees': nouveauxEmploisCrees,
       'nbNouveauxEmplois': nbNouveauxEmplois,
@@ -295,6 +301,8 @@ class SuiviConjoncture {
       raisonsHausse: map['raisonsHausse'] != null ? List<String>.from(map['raisonsHausse']) : null,
       raisonsBaisse: map['raisonsBaisse'] != null ? List<String>.from(map['raisonsBaisse']) : null,
       evolutionPrixVente: (map['evolutionPrixVente'] as num?)?.toDouble(),
+      coutsProduction: (map['coutsProduction'] as num?)?.toDouble(), // Nouveau champ
+      evolutionCoutsProduction: map['evolutionCoutsProduction'], // Nouveau champ
       effectifs: map['effectifs'],
       nouveauxEmploisCrees: map['nouveauxEmploisCrees'],
       nbNouveauxEmplois: map['nbNouveauxEmplois'],

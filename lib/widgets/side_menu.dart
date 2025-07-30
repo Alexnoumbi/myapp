@@ -24,7 +24,10 @@ class SideMenu extends StatelessWidget {
                   title: 'Dashboard',
                   icon: Icons.dashboard_outlined,
                   route: '/admin-dashboard',
-                  isActive: true,
+                  isActive: true, // Peut être ajusté dynamiquement si vous avez un état de page active
+                  onTap: () {
+                    Navigator.pushReplacementNamed(context, '/admin-dashboard'); // Correction ici
+                  },
                 ),
                 _MenuItem(
                   title: 'Entreprises',
@@ -40,6 +43,11 @@ class SideMenu extends StatelessWidget {
                   title: 'Statistiques',
                   icon: Icons.bar_chart_outlined,
                   route: '/stats',
+                ),
+                _MenuItem(
+                  title: 'Gestion des utilisateurs',
+                  icon: Icons.people_outline,
+                  route: '/user-management',
                 ),
                 const Divider(thickness: 1),
                 _MenuItem(
@@ -94,7 +102,7 @@ class _MenuItem extends StatelessWidget {
         ),
       ),
       onTap: onTap ?? () {
-        if (route != null && route != '/admin-dashboard') {
+        if (route != null && route != '/admin-dashboard') { // Condition pour éviter de pousser deux fois si déjà sur le dashboard
           Navigator.pushNamed(context, route!);
         }
       },

@@ -53,9 +53,15 @@ class PerformanceIndicatorsService {
   // Récupérer tous les indicateurs pour une période donnée
   Future<List<PerformanceIndicators>> getAllIndicatorsForPeriod(DateTime period) async {
     try {
+      // Pour une période donnée (mois/année), on cherche les indicateurs
+      // dont la date de reporting est dans ce mois/année.
+      final startOfMonth = DateTime(period.year, period.month, 1);
+      final endOfMonth = DateTime(period.year, period.month + 1, 0); // Dernier jour du mois
+
       final snapshot = await _firestore
           .collection('performance_indicators')
-          .where('reportingPeriod', isEqualTo: Timestamp.fromDate(period))
+          .where('reportingPeriod', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfMonth))
+          .where('reportingPeriod', isLessThanOrEqualTo: Timestamp.fromDate(endOfMonth))
           .get();
 
       return snapshot.docs
@@ -65,6 +71,27 @@ class PerformanceIndicatorsService {
       throw Exception('Erreur lors de la récupération des indicateurs de la période: $e');
     }
   }
+
+  // Nouvelle méthode: Récupérer les indicateurs historiques pour un graphique
+  Future<List<PerformanceIndicators>> getHistoricalIndicators(int numberOfMonths) async {
+    try {
+      final now = DateTime.now();
+      final startDate = DateTime(now.year, now.month - numberOfMonths, 1);
+
+      final snapshot = await _firestore
+          .collection('performance_indicators')
+          .where('reportingPeriod', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
+          .orderBy('reportingPeriod', descending: false) // Ordonner pour le graphique
+          .get();
+
+      return snapshot.docs
+          .map((doc) => PerformanceIndicators.fromJson(doc.data()))
+          .toList();
+    } catch (e) {
+      throw Exception('Erreur lors de la récupération des indicateurs historiques: $e');
+    }
+  }
+
 
   // Supprimer les indicateurs
   Future<void> deleteIndicators(String indicatorId) async {

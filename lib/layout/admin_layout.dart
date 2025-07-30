@@ -32,21 +32,14 @@ class AdminLayout extends StatelessWidget {
                 child: Column(
                   children: [
                     const TopNav(),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: 16),
-                            Text(
-                              title,
-                              style: AppStyles.headerStyle,
-                            ),
-                            const SizedBox(height: 20),
-                            child,
-                          ],
-                        ),
-                      ),
+                    const SizedBox(height: 16), // Espacement ajusté
+                    Text(
+                      title,
+                      style: AppStyles.headerStyle,
+                    ),
+                    const SizedBox(height: 20), // Espacement ajusté
+                    Expanded( // Cela garantit que l'enfant prend l'espace disponible restant
+                      child: child, // Le contenu de vos pages d'administration
                     ),
                   ],
                 ),

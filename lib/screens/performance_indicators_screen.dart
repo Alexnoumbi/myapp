@@ -68,134 +68,125 @@ class _PerformanceIndicatorsScreenState extends State<PerformanceIndicatorsScree
   Widget build(BuildContext context) {
     return AdminLayout(
       title: 'Indicateurs de Performance',
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          return Container(
-            width: constraints.maxWidth,
-            height: constraints.maxHeight,
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Période : ${_selectedPeriod.month}/${_selectedPeriod.year}',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.calendar_today),
-                          onPressed: () async {
-                            final date = await showDatePicker(
-                              context: context,
-                              initialDate: _selectedPeriod,
-                              firstDate: DateTime(2020),
-                              lastDate: DateTime(2030),
-                            );
-                            if (date != null) {
-                              setState(() {
-                                _selectedPeriod = date;
-                              });
-                              _loadStats();
-                            }
-                          },
-                        ),
-                      ],
+      child: Column( // Cette colonne reçoit maintenant une hauteur bornée d'AdminLayout
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Période : ${_selectedPeriod.month}/${_selectedPeriod.year}',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                ),
-                const SizedBox(height: 16),
-                if (_stats != null)
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        _buildStatCard(
-                          'Entreprises',
-                          _stats!['companiesCount'].toString(),
-                          Icons.business,
-                        ),
-                        const SizedBox(width: 16),
-                        _buildStatCard(
-                          'Emplois Total',
-                          _stats!['totalEmployees'].toString(),
-                          Icons.people,
-                        ),
-                        const SizedBox(width: 16),
-                        _buildStatCard(
-                          'Nouveaux Emplois',
-                          _stats!['totalNewJobs'].toString(),
-                          Icons.person_add,
-                        ),
-                      ],
-                    ),
+                  IconButton(
+                    icon: const Icon(Icons.calendar_today),
+                    onPressed: () async {
+                      final date = await showDatePicker(
+                        context: context,
+                        initialDate: _selectedPeriod,
+                        firstDate: DateTime(2020),
+                        lastDate: DateTime(2030),
+                      );
+                      if (date != null) {
+                        setState(() {
+                          _selectedPeriod = date;
+                        });
+                        _loadStats();
+                      }
+                    },
                   ),
-                const SizedBox(height: 16),
-                Expanded(
-                  child: Card(
-                    child: FutureBuilder<List<PerformanceIndicators>>(
-                      future: _service.getAllIndicatorsForPeriod(_selectedPeriod),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return const Center(child: CircularProgressIndicator());
-                        }
-
-                        if (snapshot.hasError) {
-                          return Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(Icons.error_outline, size: 48, color: Colors.red),
-                                const SizedBox(height: 16),
-                                Text(
-                                  'Erreur: ${snapshot.error}',
-                                  style: const TextStyle(color: Colors.red),
-                                ),
-                              ],
-                            ),
-                          );
-                        }
-
-                        if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                          return Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.analytics_outlined, size: 64, color: Colors.grey[400]),
-                                const SizedBox(height: 16),
-                                Text(
-                                  'Aucun indicateur trouvé pour cette période',
-                                  style: TextStyle(color: Colors.grey[600]),
-                                ),
-                              ],
-                            ),
-                          );
-                        }
-
-                        return ListView.separated(
-                          padding: const EdgeInsets.all(16),
-                          itemCount: snapshot.data!.length,
-                          separatorBuilder: (context, index) => const Divider(height: 1),
-                          itemBuilder: (context, index) {
-                            final indicators = snapshot.data![index];
-                            return PerformanceIndicatorsCard(indicators: indicators);
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-          );
-        },
+          ),
+          const SizedBox(height: 16),
+          if (_stats != null)
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  _buildStatCard(
+                    'Entreprises',
+                    _stats!['companiesCount'].toString(),
+                    Icons.business,
+                  ),
+                  const SizedBox(width: 16),
+                  _buildStatCard(
+                    'Emplois Total',
+                    _stats!['totalEmployees'].toString(),
+                    Icons.people,
+                  ),
+                  const SizedBox(width: 16),
+                  _buildStatCard(
+                    'Nouveaux Emplois',
+                    _stats!['totalNewJobs'].toString(),
+                    Icons.person_add,
+                  ),
+                ],
+              ),
+            ),
+          const SizedBox(height: 16),
+          Expanded( // Cet Expanded s'étend maintenant correctement dans la colonne bornée
+            child: Card(
+              child: FutureBuilder<List<PerformanceIndicators>>(
+                future: _service.getAllIndicatorsForPeriod(_selectedPeriod),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.error_outline, size: 48, color: Colors.red),
+                          const SizedBox(height: 16),
+                          Text(
+                            'Erreur: ${snapshot.error}',
+                            style: const TextStyle(color: Colors.red),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
+                  if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.analytics_outlined, size: 64, color: Colors.grey[400]),
+                          const SizedBox(height: 16),
+                          Text(
+                            'Aucun indicateur trouvé pour cette période',
+                            style: TextStyle(color: Colors.grey[600]),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
+                  return ListView.separated(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: snapshot.data!.length,
+                    separatorBuilder: (context, index) => const Divider(height: 1),
+                    itemBuilder: (context, index) {
+                      final indicators = snapshot.data![index];
+                      return PerformanceIndicatorsCard(indicators: indicators);
+                    },
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

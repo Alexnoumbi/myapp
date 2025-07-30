@@ -16,6 +16,7 @@ import 'screens/admin/admin_reports_calendar_page.dart';
 import 'screens/admin/admin_reports_export_page.dart';
 import 'screens/performance_indicators_screen.dart';
 import 'screens/admin/admin_stats_page.dart';
+import 'screens/admin/user_management_screen.dart';  // Nouvel import
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 void main() async {
@@ -99,7 +100,7 @@ class MyApp extends StatelessWidget {
         '/admin-reports-calendar': (context) => const AdminReportsCalendarPage(),
         '/admin-reports-export': (context) => const AdminReportsExportPage(),
         '/performance-indicators': (context) => const PerformanceIndicatorsScreen(),
-        '/stats': (context) => const AdminStatsPage(),
+        '/user-management': (context) => const UserManagementScreen(),  // Nouvelle route
       },
       // You can also use onGenerateRoute for more dynamic routing
       // onGenerateRoute: (settings) {

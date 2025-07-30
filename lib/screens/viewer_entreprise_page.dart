@@ -245,6 +245,8 @@ class _SuiviConjonctureDialogState extends State<SuiviConjonctureDialog> {
   final trimestreController = TextEditingController();
   final anneeController = TextEditingController();
   final commentaireController = TextEditingController();
+  final coutsProductionController = TextEditingController(); // Nouveau contrôleur
+  int? evolutionCoutsProduction; // Nouveau champ pour l'évolution des coûts
 
   @override
   void initState() {
@@ -253,6 +255,8 @@ class _SuiviConjonctureDialogState extends State<SuiviConjonctureDialog> {
       trimestreController.text = widget.initialData!['trimestre']?.toString() ?? '';
       anneeController.text = widget.initialData!['annee']?.toString() ?? '';
       commentaireController.text = widget.initialData!['commentaire'] ?? '';
+      coutsProductionController.text = widget.initialData!['coutsProduction']?.toString() ?? ''; // Initialisation
+      evolutionCoutsProduction = widget.initialData!['evolutionCoutsProduction']; // Initialisation
     }
   }
 
@@ -262,26 +266,47 @@ class _SuiviConjonctureDialogState extends State<SuiviConjonctureDialog> {
       title: Text(widget.index == null ? "Ajouter un suivi" : "Éditer le suivi"),
       content: Form(
         key: _formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextFormField(
-              controller: trimestreController,
-              decoration: const InputDecoration(labelText: "Trimestre (ex: 1, 2, 3, 4)"),
-              keyboardType: TextInputType.number,
-              validator: (v) => v == null || v.isEmpty ? "Obligatoire" : null,
-            ),
-            TextFormField(
-              controller: anneeController,
-              decoration: const InputDecoration(labelText: "Année"),
-              keyboardType: TextInputType.number,
-              validator: (v) => v == null || v.isEmpty ? "Obligatoire" : null,
-            ),
-            TextFormField(
-              controller: commentaireController,
-              decoration: const InputDecoration(labelText: "Commentaire"),
-            ),
-          ],
+        child: SingleChildScrollView( // Ajout d'un SingleChildScrollView pour éviter les débordements
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                controller: trimestreController,
+                decoration: const InputDecoration(labelText: "Trimestre (ex: 1, 2, 3, 4)"),
+                keyboardType: TextInputType.number,
+                validator: (v) => v == null || v.isEmpty ? "Obligatoire" : null,
+              ),
+              TextFormField(
+                controller: anneeController,
+                decoration: const InputDecoration(labelText: "Année"),
+                keyboardType: TextInputType.number,
+                validator: (v) => v == null || v.isEmpty ? "Obligatoire" : null,
+              ),
+              TextFormField(
+                controller: commentaireController,
+                decoration: const InputDecoration(labelText: "Commentaire"),
+              ),
+              // Nouveaux champs pour les coûts de production
+              TextFormField(
+                controller: coutsProductionController,
+                decoration: const InputDecoration(labelText: "Coûts de Production (FCFA)"),
+                keyboardType: TextInputType.number,
+              ),
+              DropdownButtonFormField<int>(
+                value: evolutionCoutsProduction,
+                decoration: const InputDecoration(
+                  labelText: "Évolution des Coûts de Production",
+                  border: OutlineInputBorder(),
+                ),
+                items: const [
+                  DropdownMenuItem(value: 1, child: Text("Accroissement")),
+                  DropdownMenuItem(value: 2, child: Text("Baisse")),
+                  DropdownMenuItem(value: 3, child: Text("Stabilité")),
+                ],
+                onChanged: (v) => setState(() => evolutionCoutsProduction = v),
+              ),
+            ],
+          ),
         ),
       ),
       actions: [
@@ -299,6 +324,8 @@ class _SuiviConjonctureDialogState extends State<SuiviConjonctureDialog> {
               'trimestre': int.tryParse(trimestreController.text),
               'annee': int.tryParse(anneeController.text),
               'commentaire': commentaireController.text.trim(),
+              'coutsProduction': double.tryParse(coutsProductionController.text), // Enregistrement
+              'evolutionCoutsProduction': evolutionCoutsProduction, // Enregistrement
             };
             if (widget.index == null) {
               suivis.add(newSuivi);

@@ -11,9 +11,9 @@ class SideMenu extends StatelessWidget {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            offset: const Offset(0, 2),
-            color: Colors.grey.withOpacity(.1),
-            blurRadius: 4
+              offset: const Offset(0, 2),
+              color: Colors.grey.withOpacity(.1),
+              blurRadius: 4
           )
         ],
       ),
@@ -52,8 +52,10 @@ class SideMenu extends StatelessWidget {
                 _buildMenuItem(
                   title: "Dashboard",
                   icon: Icons.dashboard_outlined,
-                  isActive: true,
-                  onTap: () {},
+                  isActive: true, // Peut être ajusté dynamiquement
+                  onTap: () {
+                    Navigator.pushReplacementNamed(context, '/admin-dashboard'); // Correction ici
+                  },
                 ),
                 _buildMenuItem(
                   title: "Entreprises",
@@ -63,7 +65,7 @@ class SideMenu extends StatelessWidget {
                 _buildMenuItem(
                   title: "Statistiques",
                   icon: Icons.analytics_outlined,
-                  onTap: () {},
+                  onTap: () => Navigator.pushNamed(context, '/stats'), // Assurez-vous que cela navigue vers la page des stats
                 ),
                 const Divider(
                   height: 30,
@@ -83,12 +85,12 @@ class SideMenu extends StatelessWidget {
                 _buildMenuItem(
                   title: "Paramètres",
                   icon: Icons.settings_outlined,
-                  onTap: () {},
+                  onTap: () {}, // Ajoutez la navigation si une page de paramètres existe
                 ),
                 _buildMenuItem(
                   title: "Profil",
                   icon: Icons.person_outline,
-                  onTap: () {},
+                  onTap: () {}, // Ajoutez la navigation si une page de profil existe
                 ),
                 const SizedBox(height: 16),
                 _buildMenuItem(
@@ -122,8 +124,8 @@ class SideMenu extends StatelessWidget {
         color: isLogout
             ? Colors.red
             : isActive
-                ? AppStyles.mainColor
-                : Colors.grey,
+            ? AppStyles.mainColor
+            : Colors.grey,
       ),
       title: Text(
         title,
@@ -131,8 +133,8 @@ class SideMenu extends StatelessWidget {
           color: isLogout
               ? Colors.red
               : isActive
-                  ? AppStyles.mainColor
-                  : Colors.grey[800],
+              ? AppStyles.mainColor
+              : Colors.grey[800],
           fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
         ),
       ),
