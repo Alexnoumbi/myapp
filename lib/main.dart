@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart'; // Import Firebase Core
+import 'package:flutter_riverpod/flutter_riverpod.dart'; // Import Riverpod
 import 'firebase_options.dart'; // Import your firebase_options.dart file
 import 'screens/auth_checker.dart'; // Import your AuthChecker widget
 import 'screens/login_screen.dart'; // Import your LoginScreen
@@ -7,6 +8,7 @@ import 'screens/signup_page.dart'; // Import your SignUpPage
 import 'screens/edit_entreprise_page.dart'; // Import your EditEntreprisePage
 import 'screens/all_entreprises_page.dart'; // Import your AllEntreprisesPage
 import 'screens/homepage/public_home_page.dart'; // Import your PublicHomePage
+import 'screens/home_screen.dart'; // Import your HomeScreen
 import 'screens/admin/admin_dashboard_page.dart';
 import 'screens/admin/admin_entreprise_list_page.dart';
 import 'screens/admin/admin_settings_page.dart';
@@ -16,13 +18,18 @@ import 'screens/admin/admin_reports_calendar_page.dart';
 import 'screens/admin/admin_reports_export_page.dart';
 import 'screens/performance_indicators_screen.dart';
 import 'screens/admin/admin_stats_page.dart';
-import 'screens/admin/user_management_screen.dart';  // Nouvel import
+import 'screens/admin/user_management_screen.dart';
+import 'screens/admin/admin_kpi_definition_page.dart'; // New import for KPI Definition Page
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(const MyApp());
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -89,6 +96,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => const AuthChecker(),
         '/login': (context) => const LoginScreen(),
         '/signup': (context) => const SignUpPage(),
+        '/home': (context) => const HomeScreen(),
         '/edit-entreprise': (context) => const EditEntreprisePage(),
         '/all-entreprises': (context) => const AllEntreprisesPage(),
         '/public-home': (context) => const PublicHomePage(),
@@ -97,10 +105,14 @@ class MyApp extends StatelessWidget {
         '/settings': (context) => const AdminSettingsPage(),
         '/admin-reports': (context) => const AdminReportsPage(),
         '/admin-reports-kpi': (context) => const AdminReportsKpiPage(),
-        '/admin-reports-calendar': (context) => const AdminReportsCalendarPage(),
+        '/admin-reports-calendar': (context) =>
+            const AdminReportsCalendarPage(),
         '/admin-reports-export': (context) => const AdminReportsExportPage(),
-        '/performance-indicators': (context) => const PerformanceIndicatorsScreen(),
-        '/user-management': (context) => const UserManagementScreen(),  // Nouvelle route
+        '/performance-indicators': (context) =>
+            const PerformanceIndicatorsScreen(),
+        '/user-management': (context) => const UserManagementScreen(),
+        '/kpi-definition': (context) =>
+            const AdminKpiDefinitionPage(), // New route
       },
       // You can also use onGenerateRoute for more dynamic routing
       // onGenerateRoute: (settings) {

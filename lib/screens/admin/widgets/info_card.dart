@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../../constants/style.dart';
 
 class InfoCard extends StatelessWidget {
   final String title;
   final String value;
   final IconData icon;
   final Color topColor;
-  final bool isActive;
+  final bool isSmall;
 
   const InfoCard({
     Key? key,
@@ -14,25 +13,26 @@ class InfoCard extends StatelessWidget {
     required this.value,
     required this.icon,
     required this.topColor,
-    this.isActive = false,
+    this.isSmall = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: isSmall ? 100 : 136,
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey.shade200),
         boxShadow: [
           BoxShadow(
-            offset: const Offset(0, 6),
-            color: AppStyles.mainLightColor.withOpacity(.1),
-            blurRadius: 12
-          )
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 3,
+            offset: const Offset(0, 2),
+          ),
         ],
       ),
-      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -45,34 +45,36 @@ class InfoCard extends StatelessWidget {
                   color: topColor.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(
-                  icon,
-                  size: 24,
-                  color: topColor,
-                ),
+                child: Icon(icon, color: topColor, size: isSmall ? 20 : 24),
               ),
-              Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: topColor,
-                  borderRadius: BorderRadius.circular(2),
+              if (!isSmall)
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey[600],
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
             ],
           ),
-          const SizedBox(height: 16),
-          Text(
-            title,
-            style: AppStyles.indicatorLabelStyle,
-          ),
-          const SizedBox(height: 8),
+          const Spacer(),
           Text(
             value,
-            style: AppStyles.indicatorValueStyle.copyWith(
-              color: isActive ? AppStyles.mainColor : AppStyles.mainDarkColor,
+            style: TextStyle(
+              fontSize: isSmall ? 20 : 28,
+              fontWeight: FontWeight.bold,
+              color: topColor,
             ),
           ),
+          if (isSmall)
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey[600],
+              ),
+            ),
         ],
       ),
     );

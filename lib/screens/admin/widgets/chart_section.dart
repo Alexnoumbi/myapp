@@ -19,6 +19,30 @@ class ChartSection extends StatelessWidget {
     final minY = investissements.isEmpty ? 0.0 : investissements.reduce((min, value) => value < min ? value : min);
     final padding = ((maxY - minY) * 0.1).clamp(1.0, double.infinity);
 
+    // Déterminer la hauteur responsive
+    final screenWidth = MediaQuery.of(context).size.width;
+    double chartHeight;
+    double paddingValue;
+    bool showLegend;
+    
+    if (screenWidth < 480) { // Extra small screen
+      chartHeight = 180;
+      paddingValue = 12;
+      showLegend = false;
+    } else if (screenWidth < 768) { // Small screen
+      chartHeight = 220;
+      paddingValue = 16;
+      showLegend = true;
+    } else if (screenWidth < 1024) { // Medium screen
+      chartHeight = 250;
+      paddingValue = 20;
+      showLegend = true;
+    } else { // Large screen
+      chartHeight = 300;
+      paddingValue = 24;
+      showLegend = true;
+    }
+
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -26,23 +50,27 @@ class ChartSection extends StatelessWidget {
         side: BorderSide(color: Colors.grey.shade200),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(paddingValue),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  "Évolution des investissements",
-                  style: AppStyles.cardTitleStyle,
+                Expanded(
+                  child: Text(
+                    "Évolution des investissements",
+                    style: AppStyles.cardTitleStyle.copyWith(
+                      fontSize: screenWidth < 480 ? 14 : 16,
+                    ),
+                  ),
                 ),
-                _buildLegend(),
+                if (showLegend) _buildLegend(),
               ],
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: screenWidth < 480 ? 16 : 24),
             SizedBox(
-              height: 200,
+              height: chartHeight,
               child: investissements.isEmpty
                   ? const Center(child: Text('Aucune donnée disponible'))
                   : LineChart(
@@ -65,13 +93,13 @@ class ChartSection extends StatelessWidget {
                           leftTitles: AxisTitles(
                             sideTitles: SideTitles(
                               showTitles: true,
-                              reservedSize: 40,
+                              reservedSize: screenWidth < 480 ? 30 : 40,
                               getTitlesWidget: (value, meta) {
                                 return Text(
                                   value.toInt().toString(),
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     color: Colors.grey,
-                                    fontSize: 12,
+                                    fontSize: screenWidth < 480 ? 10 : 12,
                                   ),
                                 );
                               },
@@ -90,12 +118,12 @@ class ChartSection extends StatelessWidget {
                                 final index = value.toInt();
                                 if (index >= 0 && index < labels.length) {
                                   return Padding(
-                                    padding: const EdgeInsets.only(top: 8.0),
+                                    padding: EdgeInsets.only(top: screenWidth < 480 ? 4.0 : 8.0),
                                     child: Text(
                                       labels[index],
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         color: Colors.grey,
-                                        fontSize: 12,
+                                        fontSize: screenWidth < 480 ? 10 : 12,
                                       ),
                                     ),
                                   );
